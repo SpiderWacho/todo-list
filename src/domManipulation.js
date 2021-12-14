@@ -66,21 +66,7 @@ function displayForm() {
     submit.addEventListener('click', function(e) {
         e.preventDefault;
         newTask = task(title.value, description.value, dueDate.value, priority.value, submit.value)
-        localStorage.setItem('newTask', JSON.stringify(newTask));
     })
-    
 }
-
-let currentTodo = JSON.parse(localStorage.getItem("newTask") || "[]");
-    if (currentTodo.lenght == 0 ) {
-        let currentTodo = [];}
-    else {
-        currentTodo = newTask;
-    }
-currentTodo.forEach(todo => {   document.body.append(createCard(todo))
-
-});
-
-
 
 export {createCard, createPlaceHolder, displayForm};
