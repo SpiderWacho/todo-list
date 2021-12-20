@@ -1,7 +1,7 @@
 import './style.css';
 import {task} from './taskObjects.js'
 import {formatDistanceToNow} from 'date-fns/esm';
-import {createCard, createPlaceHolder, displayForm} from './domManipulation.js';
+import {card, deleteLocal, form, getLocalStorage, changeStatus} from './domManipulation.js';
 import logoImg from './todo-icon.png'
 
 const Home = (() => {
@@ -17,6 +17,7 @@ const Home = (() => {
         title.classList.add('headBar-title');
         headBar.append(title);
         document.body.append(headBar);
+        console.log("execution");
     };
 
 function createBar() {
@@ -40,25 +41,19 @@ function createContent() {
     const cardHolder = document.createElement('div');
     cardHolder.classList.add('cardHolder');
     content.append(cardHolder);
-    return cardHolder
 }
 
 createHeadBar();
 createBar();
-const cardHolder = createContent();
-
-return {cardHolder};
+createContent();
+card.displayTasks();
 })();
 
-function appendPlaceHolder() {
-    Home.cardHolder.append(createPlaceHolder());
-}
 
-const newTask = task("Example task", "Example description", formatDistanceToNow(new Date(2021, 11, 30)), 1, false) 
-Home.cardHolder.append(createCard(newTask));
-
+const completed = document.querySelectorAll('.completed');
+completed.forEach(el => el.addEventListener('click', changeStatus));
 
 const btnNewTask = document.querySelector('.btn-newTask');
-btnNewTask.addEventListener('click', displayForm);
+btnNewTask.addEventListener('click', form.displayForm);
 
-
+//TODO: Make diferent folders for diferent projects
