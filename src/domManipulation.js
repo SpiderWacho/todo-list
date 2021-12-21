@@ -1,4 +1,5 @@
-import {task} from './taskObjects.js'
+import {task, Storage} from './taskObjects.js'
+
 
 
 const card = (() => {
@@ -15,6 +16,7 @@ function createCard(obj) {
     const newBtn = document.createElement('button');
     newBtn.classList.add('btnDelete');
     newBtn.textContent = 'X';
+    newBtn.addEventListener('click', removeTask);
     card.append(newBtn);
     return card;
 }
@@ -25,11 +27,31 @@ function createPlaceHolder() {
     const newEl = document.createElement('p');
     newEl.textContent = 'Create a new task...';
     newEl.classList.add('cardText');
-    placeHolder.id = 'placeHolder'
+    placeHolder.id = 'placeHolder';
+    placeHolder.addEventListener('click', form.displayForm);
     placeHolder.append(newEl);
     return placeHolder;
 }
 
+function displayTasks() {
+    const data = Storage.load();
+    console.log(data);
+    let j = data.length;
+    const cardHolder = document.querySelector('.cardHolder');
+    clearTasks();
+    for (let i = 0; i < j; i++) {
+        cardHolder.append(card.createCard(data[i]));
+    }
+    cardHolder.append(createPlaceHolder());
+}
+
+function removeTask(e) {
+    let currentData = Storage.load();
+    const index = e.target.previousElementSibling.textContent;
+    currentData.splice(index, 1);
+    Storage.actualize(currentData); 
+    displayTasks();
+}
 
 function clearTasks(){ 
     const cardHolder = document.querySelector('.cardHolder');
@@ -38,24 +60,11 @@ function clearTasks(){
             cardHolder.removeChild(cardHolder.lastChild);
           };
     }
-    console.log('List erased')
-}
-
-function displayTasks() {
-    const data = getLocalStorage();
-    let j = data.length;
-    const cardHolder = document.querySelector('.cardHolder');
-    clearTasks();
-    for (let i = 0; i < j; i++) {
-        cardHolder.append(card.createCard(data[i]));
-    }
-    cardHolder.append(createPlaceHolder());
-    //TODO: Make the placeholder appear last in the column
 }
 
 
 
-return {createCard, createPlaceHolder, displayTasks};
+return {createCard, createPlaceHolder, displayTasks, clearTasks};
 })();
 
 
@@ -108,8 +117,8 @@ function displayForm() {
     submit.addEventListener('click', function(e) {
         e.preventDefault();
         const newTask = task(title.value, description.value, dueDate.value, priority.value, completed.textContent);
-        saveToLocal(newTask);
-        document.querySelector('.cardHolder').append(card.createCard(newTask));
+        Storage.save(newTask);
+        card.displayTasks();
         closeForm();
     })
 
@@ -123,37 +132,15 @@ function closeForm() {
     return {displayForm}
 })();
 
-function saveToLocal(obj) {
-    const currentData = getLocalStorage();
-    let actualLenght = currentData.length;
-    console.log(actualLenght);
-    if (actualLenght = undefined) {
-        obj.number = 0;
-    }
-    else {
-        obj.number = actualLenght;
-    }
-    console.log(obj.number);
-    currentData.push(obj);
-    window.localStorage.setItem("data", JSON.stringify(currentData)); 
-}
 
-function getLocalStorage() {
-    let data = JSON.parse(localStorage.getItem("data") || "[]");
-    let currentData = [];
-    if (data.lenght != 0) {
-        currentData = data;
-    }
-    return currentData;
-}
 
-function deleteLocal() {
-    window.localStorage.setItem("data", []); 
-}
+
 
 function changeStatus(e) {
     e.target.parentNode.remove();
     //TODO: Check how to target task in localStorage, need to make an index to access
 }
 
-export {card, form, getLocalStorage, deleteLocal, changeStatus};
+
+
+export {card, form, changeStatus};

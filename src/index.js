@@ -17,7 +17,6 @@ const Home = (() => {
         title.classList.add('headBar-title');
         headBar.append(title);
         document.body.append(headBar);
-        console.log("execution");
     };
 
 function createBar() {
@@ -55,5 +54,6 @@ completed.forEach(el => el.addEventListener('click', changeStatus));
 
 const btnNewTask = document.querySelector('.btn-newTask');
 btnNewTask.addEventListener('click', form.displayForm);
+
 
 //TODO: Make diferent folders for diferent projects

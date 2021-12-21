@@ -74,6 +74,10 @@ body {
     margin: auto;
 }
 
+.index {
+    display: none;
+}
+
 .btnDelete {
     margin: auto;
     height: 50%;
