@@ -1,6 +1,5 @@
 import './style.css';
 import {task} from './taskObjects.js'
-import {formatDistanceToNow} from 'date-fns/esm';
 import {card, deleteLocal, form, getLocalStorage, changeStatus} from './domManipulation.js';
 import logoImg from './todo-icon.png'
 

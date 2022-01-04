@@ -1,4 +1,5 @@
 import {task, Storage} from './taskObjects.js'
+import {formatDistanceToNow} from 'date-fns/esm';
 
 
 
@@ -7,6 +8,15 @@ function createCard(obj) {
     const card = document.createElement('div');
     card.classList.add('card');
     for (let key in obj) {
+        if (key == 'completed') {
+            const newEl = document.createElement('p')
+            newEl.textContent = `${obj[key]}`;
+            newEl.classList.add(`${key}`)
+            newEl.classList.add('cardText');
+            newEl.addEventListener('click', changeStatus);
+            card.append(newEl);
+            continue;
+        }
         const newEl = document.createElement('p')
         newEl.textContent = `${obj[key]}`;
         newEl.classList.add(`${key}`)
@@ -35,7 +45,6 @@ function createPlaceHolder() {
 
 function displayTasks() {
     const data = Storage.load();
-    console.log(data);
     let j = data.length;
     const cardHolder = document.querySelector('.cardHolder');
     clearTasks();
@@ -48,6 +57,7 @@ function displayTasks() {
 function removeTask(e) {
     let currentData = Storage.load();
     const index = e.target.previousElementSibling.textContent;
+    console.log(index);
     currentData.splice(index, 1);
     Storage.actualize(currentData); 
     displayTasks();
@@ -109,6 +119,7 @@ function displayForm() {
     submit.setAttribute("type", "submit");
     submit.setAttribute("name", "submit");
     submit.value = 'Submit';
+    submit.classList.add("submit");
 
 
     form.append(title, description, dueDate, priority, submit);
@@ -116,8 +127,10 @@ function displayForm() {
     
     submit.addEventListener('click', function(e) {
         e.preventDefault();
-        const newTask = task(title.value, description.value, dueDate.value, priority.value, completed.textContent);
-        Storage.save(newTask);
+        let formatedDate = new Date (dueDate.value);
+        let dtDateOnly = new Date(formatedDate.valueOf() + formatedDate.getTimezoneOffset() * 60 * 1000);
+        const newTask = task(title.value, description.value, formatDistanceToNow(dtDateOnly), priority.value, completed.textContent);
+        Storage.save(newTask);     
         card.displayTasks();
         closeForm();
     })
@@ -133,11 +146,13 @@ function closeForm() {
 })();
 
 
-
-
-
 function changeStatus(e) {
-    e.target.parentNode.remove();
+    let currentData = Storage.load();
+    const index = e.target.nextElementSibling.textContent;
+    currentData[index].completed = 'Completed';
+    Storage.actualize(currentData);
+    e.target.textContent = 'Completed';
+
     //TODO: Check how to target task in localStorage, need to make an index to access
 }
 

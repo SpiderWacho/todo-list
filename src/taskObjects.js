@@ -26,6 +26,10 @@ const Storage = (() => {
     }
 
     function actualize(data) {
+        let j = data.length;
+        for (let i = 0; i < j ; i++) {
+            data[i].index = i;
+        }
         window.localStorage.setItem("data", JSON.stringify(data));
     }
 
