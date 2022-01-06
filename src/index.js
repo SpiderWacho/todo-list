@@ -1,5 +1,5 @@
 import './style.css';
-import {task} from './taskObjects.js'
+import {task, Storage} from './taskObjects.js'
 import {card, deleteLocal, form, getLocalStorage, changeStatus} from './domManipulation.js';
 import logoImg from './todo-icon.png'
 
@@ -41,6 +41,8 @@ function createContent() {
     content.append(cardHolder);
 }
 
+
+
 createHeadBar();
 createBar();
 createContent();
@@ -53,6 +55,23 @@ completed.forEach(el => el.addEventListener('click', changeStatus));
 
 const btnNewTask = document.querySelector('.btn-newTask');
 btnNewTask.addEventListener('click', form.displayForm);
+
+const btnMyProjects = document.querySelector('.btn-myProjects');
+btnMyProjects.addEventListener("click", function addNewProject(){
+    let newProject = prompt("New project name");
+    let newP = document.createElement("p");
+    const tabBar = document.querySelector(".tabBar")
+    newP.textContent = newProject;
+    tabBar.append(newP)
+    newP.addEventListener("click", function changeProject(){
+        let currentProject = newP.textContent;
+        console.log(`Current project is ${currentProject}`);
+        return currentProject;
+    })
+
+})
+
+
 
 
 //TODO: Make diferent folders for diferent projects

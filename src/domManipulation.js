@@ -45,6 +45,7 @@ function createPlaceHolder() {
 
 function displayTasks() {
     const data = Storage.load();
+    console.log(data);
     let j = data.length;
     const cardHolder = document.querySelector('.cardHolder');
     clearTasks();
@@ -57,7 +58,6 @@ function displayTasks() {
 function removeTask(e) {
     let currentData = Storage.load();
     const index = e.target.previousElementSibling.textContent;
-    console.log(index);
     currentData.splice(index, 1);
     Storage.actualize(currentData); 
     displayTasks();
@@ -147,15 +147,14 @@ function closeForm() {
 
 
 function changeStatus(e) {
-    let currentData = Storage.load();
+    let currentData = Storage.load(currentProject);
     const index = e.target.nextElementSibling.textContent;
     currentData[index].completed = 'Completed';
-    Storage.actualize(currentData);
+    Storage.actualize(currentProject);
     e.target.textContent = 'Completed';
 
     //TODO: Check how to target task in localStorage, need to make an index to access
 }
-
 
 
 export {card, form, changeStatus};
