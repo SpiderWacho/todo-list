@@ -1,4 +1,4 @@
-import {task, Storage} from './taskObjects.js'
+import {task, Storage, Projects} from './taskObjects.js'
 import {formatDistanceToNow} from 'date-fns/esm';
 
 
@@ -43,12 +43,11 @@ function createPlaceHolder() {
     return placeHolder;
 }
 
-function displayTasks() {
-    const data = Storage.load();
-    console.log(data);
+function displayTasks(currentProject) {
+    clearTasks();
+    const data = Storage.load(currentProject);
     let j = data.length;
     const cardHolder = document.querySelector('.cardHolder');
-    clearTasks();
     for (let i = 0; i < j; i++) {
         cardHolder.append(card.createCard(data[i]));
     }
@@ -56,11 +55,13 @@ function displayTasks() {
 }
 
 function removeTask(e) {
-    let currentData = Storage.load();
+    let cardHolder = document.querySelector('.cardHolder');
+    let currentProject = cardHolder.getAttribute('data-project')  
+    let currentData = Storage.load(currentProject);
     const index = e.target.previousElementSibling.textContent;
     currentData.splice(index, 1);
-    Storage.actualize(currentData); 
-    displayTasks();
+    Storage.actualize(currentData, currentProject); 
+    displayTasks(currentProject);
 }
 
 function clearTasks(){ 
@@ -127,11 +128,14 @@ function displayForm() {
     
     submit.addEventListener('click', function(e) {
         e.preventDefault();
+        let cardHolder = document.querySelector('.cardHolder');
+        let currentProject = cardHolder.getAttribute('data-project')        
         let formatedDate = new Date (dueDate.value);
         let dtDateOnly = new Date(formatedDate.valueOf() + formatedDate.getTimezoneOffset() * 60 * 1000);
         const newTask = task(title.value, description.value, formatDistanceToNow(dtDateOnly), priority.value, completed.textContent);
-        Storage.save(newTask);     
-        card.displayTasks();
+        Storage.save(newTask, currentProject); 
+        console.log(`saved to ${currentProject}`)    
+        card.displayTasks(currentProject);
         closeForm();
     })
 

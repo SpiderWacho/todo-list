@@ -1,5 +1,5 @@
 import './style.css';
-import {task, Storage} from './taskObjects.js'
+import {task, Storage, Projects} from './taskObjects.js'
 import {card, deleteLocal, form, getLocalStorage, changeStatus} from './domManipulation.js';
 import logoImg from './todo-icon.png'
 
@@ -26,10 +26,23 @@ function createBar() {
     btn.classList.add('btn-newTask')
     btn.textContent = 'New Task';
     tabBar.append(btn);
-    const myProjects = document.createElement('button')
-    myProjects.textContent = 'My projects';
-    myProjects.classList.add('btn-myProjects')
-    tabBar.append(myProjects);
+    const newProject = document.createElement('button')
+    newProject.textContent = 'New project';
+    newProject.classList.add('btn-newProject')
+    newProject.addEventListener('click', createNewProject);
+    tabBar.append(newProject);
+    
+    const inbox = document.createElement('p');
+    inbox.textContent = 'Inbox';
+    inbox.classList.add('projectsName')
+    inbox.addEventListener("click", projectOnClick);
+    tabBar.append(inbox);
+
+    const completed = document.createElement('p');
+    completed.textContent = 'Completed';
+    completed.classList.add('projectsName');
+    completed.addEventListener("click", projectOnClick);
+    tabBar.append(completed);
 }
 
 function createContent() {    
@@ -38,15 +51,47 @@ function createContent() {
     document.body.append(content);
     const cardHolder = document.createElement('div');
     cardHolder.classList.add('cardHolder');
+    cardHolder.setAttribute('data-project', 'inbox');
     content.append(cardHolder);
 }
 
+function createNewProject() {
+    let title = prompt('Create a new project:');
+    const newProject = document.createElement('p');
+    newProject.textContent = title;
+    newProject.classList.add('projectsName')
+    newProject.addEventListener("click", projectOnClick)
+    let tabBar = document.querySelector('.tabBar');
+    tabBar.append(newProject);
+    Projects.save(title);
+    
+}
+
+function appendProjects() {
+    let tabBar = document.querySelector('.tabBar');
+    let projects = Projects.load();
+    let projectsLength = projects.length;
+    for (let i = 0; i < projectsLength; i++) {
+        const newProject = document.createElement('p');
+        newProject.textContent = projects[i];
+        newProject.classList.add('projectsName')
+        newProject.addEventListener("click", projectOnClick)
+        tabBar.append(newProject);
+    }
+}
+
+function projectOnClick(e){
+    let cardHolder = document.querySelector('.cardHolder');
+    cardHolder.setAttribute('data-project', e.target.textContent);
+    card.displayTasks(e.target.textContent)
+}
 
 
 createHeadBar();
 createBar();
 createContent();
-card.displayTasks();
+card.displayTasks("inbox");
+appendProjects();
 })();
 
 
@@ -55,21 +100,6 @@ completed.forEach(el => el.addEventListener('click', changeStatus));
 
 const btnNewTask = document.querySelector('.btn-newTask');
 btnNewTask.addEventListener('click', form.displayForm);
-
-const btnMyProjects = document.querySelector('.btn-myProjects');
-btnMyProjects.addEventListener("click", function addNewProject(){
-    let newProject = prompt("New project name");
-    let newP = document.createElement("p");
-    const tabBar = document.querySelector(".tabBar")
-    newP.textContent = newProject;
-    tabBar.append(newP)
-    newP.addEventListener("click", function changeProject(){
-        let currentProject = newP.textContent;
-        console.log(`Current project is ${currentProject}`);
-        return currentProject;
-    })
-
-})
 
 
 
