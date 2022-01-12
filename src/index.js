@@ -1,6 +1,6 @@
 import './style.css';
 import {task, Storage, Projects} from './taskObjects.js'
-import {card, deleteLocal, form, getLocalStorage, changeStatus} from './domManipulation.js';
+import {content, deleteLocal, form, getLocalStorage, changeStatus, appendProjects} from './domManipulation.js';
 import logoImg from './todo-icon.png'
 
 const Home = (() => {
@@ -35,13 +35,13 @@ function createBar() {
     const inbox = document.createElement('p');
     inbox.textContent = 'Inbox';
     inbox.classList.add('projectsName')
-    inbox.addEventListener("click", projectOnClick);
+    inbox.addEventListener("click", content.projectOnClick);
     tabBar.append(inbox);
 
     const completed = document.createElement('p');
     completed.textContent = 'Completed';
     completed.classList.add('projectsName');
-    completed.addEventListener("click", projectOnClick);
+    completed.addEventListener("click", content.projectOnClick);
     tabBar.append(completed);
 }
 
@@ -51,7 +51,7 @@ function createContent() {
     document.body.append(content);
     const cardHolder = document.createElement('div');
     cardHolder.classList.add('cardHolder');
-    cardHolder.setAttribute('data-project', 'inbox');
+    cardHolder.setAttribute('data-project', 'Inbox');
     content.append(cardHolder);
 }
 
@@ -60,38 +60,21 @@ function createNewProject() {
     const newProject = document.createElement('p');
     newProject.textContent = title;
     newProject.classList.add('projectsName')
-    newProject.addEventListener("click", projectOnClick)
+    newProject.addEventListener("click", content.projectOnClick)
     let tabBar = document.querySelector('.tabBar');
     tabBar.append(newProject);
     Projects.save(title);
-    
 }
 
-function appendProjects() {
-    let tabBar = document.querySelector('.tabBar');
-    let projects = Projects.load();
-    let projectsLength = projects.length;
-    for (let i = 0; i < projectsLength; i++) {
-        const newProject = document.createElement('p');
-        newProject.textContent = projects[i];
-        newProject.classList.add('projectsName')
-        newProject.addEventListener("click", projectOnClick)
-        tabBar.append(newProject);
-    }
-}
 
-function projectOnClick(e){
-    let cardHolder = document.querySelector('.cardHolder');
-    cardHolder.setAttribute('data-project', e.target.textContent);
-    card.displayTasks(e.target.textContent)
-}
+
 
 
 createHeadBar();
 createBar();
 createContent();
-card.displayTasks("inbox");
-appendProjects();
+content.displayTasks("Inbox");
+content.appendProjects();
 })();
 
 
@@ -100,8 +83,6 @@ completed.forEach(el => el.addEventListener('click', changeStatus));
 
 const btnNewTask = document.querySelector('.btn-newTask');
 btnNewTask.addEventListener('click', form.displayForm);
-
-
 
 
 //TODO: Make diferent folders for diferent projects

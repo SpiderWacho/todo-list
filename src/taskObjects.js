@@ -54,8 +54,24 @@ const Projects = (() => {
         }
         return currentData;
     }
+    function actualize(data) {
+        window.localStorage.setItem('projects', JSON.stringify(data));
+    }
+
+    function remove(project) {
+        const currentData = Projects.load();
+        let index = currentData.indexOf(project);
+        if (index !== -1) {
+            currentData.splice(index, 1);
+        }
+        actualize(currentData);
+    }
+
+
+
+    
          
-    return {save, load}
+    return {save, load, remove};
 })();
 
 export {task, Storage, Projects};

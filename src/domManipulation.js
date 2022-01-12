@@ -3,7 +3,7 @@ import {formatDistanceToNow} from 'date-fns/esm';
 
 
 
-const card = (() => {
+const content = (() => {
 function createCard(obj) {
     const card = document.createElement('div');
     card.classList.add('card');
@@ -49,9 +49,46 @@ function displayTasks(currentProject) {
     let j = data.length;
     const cardHolder = document.querySelector('.cardHolder');
     for (let i = 0; i < j; i++) {
-        cardHolder.append(card.createCard(data[i]));
+        cardHolder.append(createCard(data[i]));
     }
     cardHolder.append(createPlaceHolder());
+    const newP = document.createElement('p');
+    newP.classList.add('btn-remove');
+    newP.textContent = 'Delete Project'
+    newP.addEventListener('click', deleteProject);
+    cardHolder.append(newP);
+}
+
+function deleteProject() {
+        let cardHolder = document.querySelector('.cardHolder');
+        let currentProject = cardHolder.getAttribute('data-project');
+        if (currentProject === 'Inbox' || currentProject === 'Completed') {
+            return;
+        }
+        let elements = document.querySelectorAll('.projectsName')
+        let length = elements.length;
+        for (let i = 0; i < length; i++) {
+            if (elements[i].textContent === currentProject) {
+                elements[i].remove();
+            }
+        }
+        Projects.remove(currentProject)
+        window.localStorage.removeItem(currentProject);
+        displayTasks('index');
+}
+
+function appendProjects() {
+    let tabBar = document.querySelector('.tabBar');
+    let projects = Projects.load();
+    let projectsLength = projects.length;
+    for (let i = 0; i < projectsLength; i++) {
+        const newProject = document.createElement('p');
+        newProject.textContent = projects[i];
+        newProject.classList.add('projectsName')
+        newProject.addEventListener("click", projectOnClick)
+        tabBar.append(newProject);
+        console.log(projects[i]);
+        }
 }
 
 function removeTask(e) {
@@ -73,9 +110,15 @@ function clearTasks(){
     }
 }
 
+function projectOnClick(e){
+    let cardHolder = document.querySelector('.cardHolder');
+    cardHolder.setAttribute('data-project', e.target.textContent);
+    displayTasks(e.target.textContent)
+}
 
 
-return {createCard, createPlaceHolder, displayTasks, clearTasks};
+
+return {createCard, createPlaceHolder, displayTasks, clearTasks, appendProjects, projectOnClick};
 })();
 
 
@@ -89,6 +132,15 @@ function displayForm() {
     const containerForm = document.createElement('div');
     containerForm.classList.add('container-form');
     formBackground.append(containerForm);
+
+    const divClose = document.createElement('div');
+    divClose.classList.add('divClose');
+    const btnClose = document.createElement('p');
+    btnClose.textContent = 'X'
+    btnClose.classList.add('btn-close');
+    btnClose.addEventListener('click', closeForm);
+    divClose.append(btnClose);
+    containerForm.append(divClose);
 
     const form = document.createElement('form');
     
@@ -135,7 +187,7 @@ function displayForm() {
         const newTask = task(title.value, description.value, formatDistanceToNow(dtDateOnly), priority.value, completed.textContent);
         Storage.save(newTask, currentProject); 
         console.log(`saved to ${currentProject}`)    
-        card.displayTasks(currentProject);
+        content.displayTasks(currentProject);
         closeForm();
     })
 
@@ -151,14 +203,20 @@ function closeForm() {
 
 
 function changeStatus(e) {
+    let cardHolder = document.querySelector('.cardHolder');
+    let currentProject = cardHolder.getAttribute('data-project');  
     let currentData = Storage.load(currentProject);
     const index = e.target.nextElementSibling.textContent;
     currentData[index].completed = 'Completed';
-    Storage.actualize(currentProject);
-    e.target.textContent = 'Completed';
+    Storage.save(currentData[index], 'Completed');
+    currentData.splice(index, 1);
+    Storage.actualize(currentData, currentProject); 
+    e.target.parentNode.remove();
+    
+
 
     //TODO: Check how to target task in localStorage, need to make an index to access
 }
 
 
-export {card, form, changeStatus};
+export {content, form, changeStatus};
