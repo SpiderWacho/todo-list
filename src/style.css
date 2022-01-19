@@ -15,6 +15,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px solid rgb(24, 24, 24);
 }
 
 .logoImg {
@@ -42,6 +43,7 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
+    border: 2px solid grey;
 }
 
 .btn-newTask {
@@ -294,12 +296,11 @@ input {
 }
 
 @media only screen and (min-width: 1200px) {
-    
     .headBar {
         height: 10vh;
         justify-content: flex-start;
     }
-
+    
     .tabBar {
         font-size: 1em;
     }
@@ -312,6 +313,7 @@ input {
 @media all and (orientation: landscape) and (max-height: 500px) { 
     .headBar {
         height: 12vh;
+         
     }
 
     #placeHolder {
@@ -325,6 +327,7 @@ input {
         font-size: 0.8em;
         height: 100px;
         overflow: scroll;
+        border: solid 2px grey;
     }
 
     .btn-newTask {
