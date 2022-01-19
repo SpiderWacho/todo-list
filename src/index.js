@@ -57,6 +57,9 @@ function createContent() {
 
 function createNewProject() {
     let title = prompt('Create a new project:');
+    if (title === '' || title === null) {
+        return;
+    }
     const newProject = document.createElement('p');
     newProject.textContent = title;
     newProject.classList.add('projectsName')
@@ -68,7 +71,7 @@ function createNewProject() {
 
 
 
-
+//window.localStorage.clear();
 
 createHeadBar();
 createBar();
@@ -78,11 +81,10 @@ content.appendProjects();
 })();
 
 
+
 const completed = document.querySelectorAll('.completed');
 completed.forEach(el => el.addEventListener('click', changeStatus));
 
 const btnNewTask = document.querySelector('.btn-newTask');
 btnNewTask.addEventListener('click', form.displayForm);
 
-
-//TODO: Make diferent folders for diferent projects

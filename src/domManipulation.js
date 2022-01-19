@@ -17,6 +17,16 @@ function createCard(obj) {
             card.append(newEl);
             continue;
         }
+        if (key == 'dueDate') {
+            const newEl = document.createElement('p')
+            let formatedDate = new Date (obj[key]);
+            let dtDateOnly = new Date(formatedDate.valueOf() + formatedDate.getTimezoneOffset() * 60 * 1000);
+            newEl.textContent = formatDistanceToNow(dtDateOnly);
+            newEl.classList.add(`${key}`);
+            newEl.classList.add('cardText');
+            card.append(newEl);
+            continue;
+        }
         const newEl = document.createElement('p')
         newEl.textContent = `${obj[key]}`;
         newEl.classList.add(`${key}`)
@@ -37,6 +47,7 @@ function createPlaceHolder() {
     const newEl = document.createElement('p');
     newEl.textContent = 'Create a new task...';
     newEl.classList.add('cardText');
+    newEl.id = 'placeHolderText';
     placeHolder.id = 'placeHolder';
     placeHolder.addEventListener('click', form.displayForm);
     placeHolder.append(newEl);
@@ -52,9 +63,12 @@ function displayTasks(currentProject) {
         cardHolder.append(createCard(data[i]));
     }
     cardHolder.append(createPlaceHolder());
+    if (currentProject === 'Completed' || currentProject === 'Inbox') {
+        return;
+    }
     const newP = document.createElement('p');
     newP.classList.add('btn-remove');
-    newP.textContent = 'Delete Project'
+    newP.textContent = `Delete ${currentProject} folder`;
     newP.addEventListener('click', deleteProject);
     cardHolder.append(newP);
 }
@@ -81,13 +95,17 @@ function appendProjects() {
     let tabBar = document.querySelector('.tabBar');
     let projects = Projects.load();
     let projectsLength = projects.length;
+    console.log(projects);
     for (let i = 0; i < projectsLength; i++) {
         const newProject = document.createElement('p');
         newProject.textContent = projects[i];
+        
+        if (newProject.textContent === '') {
+            continue;
+        }
         newProject.classList.add('projectsName')
         newProject.addEventListener("click", projectOnClick)
         tabBar.append(newProject);
-        console.log(projects[i]);
         }
 }
 
@@ -180,13 +198,20 @@ function displayForm() {
     
     submit.addEventListener('click', function(e) {
         e.preventDefault();
+        console.log(dueDate);
+        if (dueDate.value === '') {
+            if (document.querySelector('.errorMsg') == undefined) {
+            const newP = document.createElement('p');
+            newP.textContent = 'You must input a valid due date';
+            newP.classList.add('errorMsg');
+            containerForm.append(newP);
+            }
+            return;
+        }
         let cardHolder = document.querySelector('.cardHolder');
         let currentProject = cardHolder.getAttribute('data-project')        
-        let formatedDate = new Date (dueDate.value);
-        let dtDateOnly = new Date(formatedDate.valueOf() + formatedDate.getTimezoneOffset() * 60 * 1000);
-        const newTask = task(title.value, description.value, formatDistanceToNow(dtDateOnly), priority.value, completed.textContent);
-        Storage.save(newTask, currentProject); 
-        console.log(`saved to ${currentProject}`)    
+        const newTask = task(title.value, description.value, dueDate.value, priority.value, completed.textContent);
+        Storage.save(newTask, currentProject);   
         content.displayTasks(currentProject);
         closeForm();
     })
@@ -204,7 +229,10 @@ function closeForm() {
 
 function changeStatus(e) {
     let cardHolder = document.querySelector('.cardHolder');
-    let currentProject = cardHolder.getAttribute('data-project');  
+    let currentProject = cardHolder.getAttribute('data-project'); 
+    if (currentProject === 'Completed') {
+        return;
+    } 
     let currentData = Storage.load(currentProject);
     const index = e.target.nextElementSibling.textContent;
     currentData[index].completed = 'Completed';
@@ -212,10 +240,6 @@ function changeStatus(e) {
     currentData.splice(index, 1);
     Storage.actualize(currentData, currentProject); 
     e.target.parentNode.remove();
-    
-
-
-    //TODO: Check how to target task in localStorage, need to make an index to access
 }
 
 

@@ -1,3 +1,7 @@
+* {
+    margin: 0;
+}
+
 body {
     display: flex;
     flex-wrap: wrap;
@@ -5,11 +9,12 @@ body {
 
 .headBar {
     width: 100vw;
-    height: 10vh;
+    height: 5vh;
     background-color: rgb(59, 59, 59);
     color: white;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .logoImg {
@@ -21,47 +26,64 @@ body {
 
 .content {
     height: 80vh;
-    width: 90%; 
+    width: 100%; 
     display: flex;
     flex-wrap: wrap;   
+    
 }
 
 .tabBar {
-    height: 100vh;
-    width: 10;
+    height: 10vh;
+    width: 100%;
     background-color: rgb(197, 197, 197);
     color: black;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-evenly;
 }
 
 .btn-newTask {
     height: 50px;
-    width: 150px;
-    margin-top: 20%;
+    width: 15%;
+    font-size: 1em;
 }
 
 .btn-newProject {
     height: 50px;
-    width: 150px;
-    margin-top: 20%;
+    width: 15%;
+    font-size: 1em;
+}
 
+.projectsName {
+    background-color: rgb(255, 255, 255);
+    border: 2px solid grey;
+    box-shadow: 0px 0px 1px 0.5px grey;
+    width: 20%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.projectsName:hover {
+    background-color: rgb(156, 156, 156);
 }
 
 .cardHolder {
-    height: 100vh;
-    width: 90%;
+    width: 100%;
+    height: 100%; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow: scroll;
 }
 
 .card {
     width: 100%;
-    height: 20%;
+    height: 15%;
+    min-height: 150px;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: 1;
@@ -74,6 +96,17 @@ body {
     margin: auto;
 }
 
+
+.completed {
+    background-color: grey;
+    border: 1px black solid;
+
+}
+
+.completed:hover {
+    background-color: rgb(184, 184, 184);
+}
+
 .index {
     display: none;
 }
@@ -81,7 +114,9 @@ body {
 .btnDelete {
     margin: auto;
     height: 50%;
-    width: 20%;
+    width: 10%;
+    min-width: 50px;
+    max-height: 50px;
     background-color: red;
     color: white;
     font-size: 1em;
@@ -89,19 +124,40 @@ body {
 
 #placeHolder {
     color: rgba(110, 110, 110, 0.603);
+    width: 100%;
+    max-height: 100px;
+    height: 5%;
+    position:fixed;
+    bottom: 0;
+    
 }
 
 #placeHolder:hover {
     background-color: rgb(204, 204, 204);
 }
 
+
+#placeHolderText {
+    width: 100%;
+    white-space: pre;
+}
+
 .btn-remove {
-    font-size: 2em;
-    width: 150px;
+    font-size: 1em;
+    width: 300px;
     text-align: center;
     margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
     background-color: red;
-    border: 2px solid black
+    border: none;
+    overflow-wrap: break-word;
+    box-shadow: 0px 0px 1px 2px black;
+}
+
+.btn-remove:hover {
+    background-color: rgb(189, 0, 0);
 }
 
 
@@ -133,9 +189,13 @@ body {
     text-align: center;
 }
 
+.btn-close:hover {
+    background-color: rgb(109, 0, 0);
+}
+
 .container-form {
-    width: 60%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -145,28 +205,100 @@ body {
 }
 
 form {
-    height: 90%;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
 input {
-    width: 50%;
-    margin-top: 10px;
+    width: 80%;
+    max-width: 650px;
+    margin-top: 10%;
     background-color: transparent;
     border: none;
     border-bottom: 2px solid black;
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.5em;
     text-align: center;
 }
 
 .submit {
     background-color: tomato;
-    width: 10%;
+    width: auto;
+    min-width: 150px;
     height: 10%;
-   
+}
+
+.submit:hover {
+    background-color: rgb(175, 66, 47);
+}
+
+.submit:focus {
+    width: 85%;
+}
+
+.errorMsg {
+    color: red;
+    margin-bottom: 10%;
+    font-size: 1.5em;
+}
+
+@media only screen and (min-width: 992px) {
+    .tabBar {
+        height: 100vh;
+        width: 15%;
+        flex-direction: column;
+        justify-content: flex-start;
+        max-width: 250px;
+    }
+
+    .btn-newTask {
+        margin-top: 5%;
+        width: 70%;
+    }
+
+    .btn-newProject {
+        margin-top: 5%;
+        width: 70%;
+    }
+
+    .projectsName {
+        margin-top: 5%;
+        width: 70%;
+    }
+
+    #placeHolder {
+        position: relative;
+        width: 100%;
+        height: 15%;
+    }
+
+    .content {
+        width: 85%;
+    }
+
+    .container-form {
+        width: 75vw;
+        height: 80vh;
+    }
+
+}
+
+@media only screen and (min-width: 1200px) {
+    
+    .headBar {
+        height: 10vh;
+        justify-content: flex-start;
+    }
+
+    .tabBar {
+        font-size: 1em;
+    }
+
+    input {
+        margin-top: 4%;
+    }
 }
