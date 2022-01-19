@@ -9,7 +9,7 @@ body {
 
 .headBar {
     width: 100vw;
-    height: 5vh;
+    height: 8vh;
     background-color: rgb(59, 59, 59);
     color: white;
     display: flex;
@@ -287,6 +287,12 @@ input {
 
 }
 
+@media only screen and (max-width: 480px) {
+    #placeHolder {
+        display: none;
+    }
+}
+
 @media only screen and (min-width: 1200px) {
     
     .headBar {
@@ -300,5 +306,53 @@ input {
 
     input {
         margin-top: 4%;
+    }
+}
+
+@media all and (orientation: landscape) and (max-height: 500px) { 
+    .headBar {
+        height: 12vh;
+    }
+
+    #placeHolder {
+        display: none;
+    }
+    
+    .tabBar {
+        position: fixed;
+        bottom: 0;
+        height: auto;
+        font-size: 0.8em;
+        height: 100px;
+        overflow: scroll;
+    }
+
+    .btn-newTask {
+        margin-top: 15px;
+        max-width: auto;
+        width: 40%;
+    }
+
+    .btn-newProject {
+        margin-top: 15px;
+        max-width: auto;
+        width: 40%;
+    }
+
+    .projectsName {
+        margin-top: 15px;
+        max-width: auto;
+        width: 40%;
+    }
+
+    .container-form {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+    }
+
+    input {
+        margin-top: 5%;
+        font-size: 1em;
     }
 }
